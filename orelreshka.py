@@ -1,6 +1,8 @@
+#Орел или решка
+#GUI помогает подбросить виртуальную монету и узнать результат - орел или решка
+
 from livewires import games, color
 import random
-
 
 games.init(screen_height=480, screen_width=640, fps=50)
 
@@ -8,6 +10,7 @@ the_sky = games.load_image("sky.jpg", transparent=False)
 games.screen.background = the_sky
 
 class Flip(games.Animation):
+    """Анимация 'подбросанной' монеты."""
     flipchik = ["orelre.bmp",
                 "reshkare.bmp"]
     def __init__(self):
@@ -18,19 +21,17 @@ class Flip(games.Animation):
                                    repeat_interval=25)
 
 class Changer(games.Sprite):
-
+    """То на чем все держится - двигателль"""
     def change(self):
         y = random.randrange(2)
         if y == 0:
             orel = Orel()
             games.screen.add(orel)
             orel.update()
-
         if y == 1:
             reshka = Reshka()
             games.screen.add(reshka)
             reshka.update()
-
 
         new_flip = Flip()
         games.screen.add(new_flip)
@@ -40,6 +41,7 @@ class Changer(games.Sprite):
 
 
 class F_button (games.Text):
+    """Текст подсказка."""
     f_delay = 1000
     def __init__(self):
         super(F_button, self).__init__(value="Нажмите F, чтобы подбросить монету.",
@@ -50,6 +52,7 @@ class F_button (games.Text):
         self.f_wait = 0
 
     def update(self):
+        """Метод следит за клавишей f и имеет счетчик в 20 сек"""
         if self.f_wait > 0:
             self.f_wait -= 1
 
@@ -59,6 +62,7 @@ class F_button (games.Text):
 
 
 class Orel(Changer):
+    """Спрайт орел. выходит на экран и вызывает сообщение"""
     orel = games.load_image("orelre.bmp")
     def __init__(self):
         super(Orel, self).__init__(image=Orel.orel,
@@ -76,8 +80,9 @@ class Orel(Changer):
         if self.time <500:
             hint1 = Hint("Орел")
             games.screen.add(hint1)
-retro = Orel()
+retro = Orel() # нужно для вызова метода change
 class Reshka(Changer):
+    """Спрайт решка. выходит на экран и вызывает сообщение"""
     reshka = games.load_image("reshkare.bmp")
     def __init__(self):
         super(Reshka, self).__init__(image=Reshka.reshka,
@@ -98,6 +103,7 @@ class Reshka(Changer):
             games.screen.add(hint2)
 
 class Hint(games.Message):
+    """сообщение"""
     def __init__(self, value):
         super(Hint, self).__init__(value = value,
                                    size = 40,
